@@ -1,0 +1,32 @@
+variables:
+  - &build_plugin 'woodpeckerci/plugin-docker-buildx'
+  - base_settings: &base_buildx_settings
+      platforms: linux/amd64
+      tags: latest,${CI_COMMIT_TAG}
+      registry:
+        from_secret: REGISTRY_HOST
+      username:
+        from_secret: REGISTRY_LOGIN_USERNAME
+      password:
+        from_secret: REGISTRY_LOGIN_PASSWORD
+
+
+pipeline:
+  docker-build-client:
+    image: *build_plugin
+    secrets: [REGISTRY_HOST, REGISTRY_LOGIN_USERNAME, REGISTRY_LOGIN_PASSWORD]
+    settings:
+      <<: *base_buildx_settings
+      dockerfile: client/Dockerfile
+      repo: git.alnn.xyz/${CI_REPO_OWNER}/szurubooru-client
+      context: ./client/
+
+  docker-build-server:
+    image: *build_plugin
+    secrets: [REGISTRY_HOST, REGISTRY_LOGIN_USERNAME, REGISTRY_LOGIN_PASSWORD]
+    settings:
+      <<: *base_buildx_settings
+      dockerfile: server/Dockerfile
+      repo: git.alnn.xyz/${CI_REPO_OWNER}/szurubooru-server
+      context: ./server/
+

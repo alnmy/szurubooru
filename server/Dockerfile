@@ -35,8 +35,6 @@ RUN apk --no-cache add \
  && apk --no-cache del py3-pip
 
 COPY ./ /opt/app/
-RUN rm -rf /opt/app/szurubooru/tests
-
 
 FROM --platform=$BUILDPLATFORM prereqs as testing
 WORKDIR /opt/app
